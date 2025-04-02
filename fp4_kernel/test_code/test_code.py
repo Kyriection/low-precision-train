@@ -9,7 +9,7 @@ class FP4Linear(nn.Module):
         # Create full precision master copies
         self.weight = nn.Parameter(torch.randn(in_features, out_features, device="cuda"))
         self.bias = nn.Parameter(torch.zeros(out_features, device="cuda"))
-    
+
     def forward(self, x):
         # Use the custom autograd function
         # Note: Adjust the order of parameters if needed.
