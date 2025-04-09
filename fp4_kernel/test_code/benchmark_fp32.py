@@ -36,11 +36,12 @@ def train():
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     criterion = nn.MSELoss()
 
+    torch.manual_seed(0)
     X = torch.randn(num_samples, input_dim).to(device)
     true_weights = torch.randn(input_dim, output_dim).to(device)
-    y = X @ true_weights + 0.1 * torch.randn(num_samples, output_dim).to(device)
+    y = X @ true_weights + 0.01 * torch.randn(num_samples, output_dim).to(device)
 
-    for epoch in range(10):
+    for epoch in range(50):
         optimizer.zero_grad()
         output = model(X)
         loss = criterion(output, y)
