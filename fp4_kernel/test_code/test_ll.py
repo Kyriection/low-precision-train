@@ -40,7 +40,7 @@ def train_and_time():
     start_event.record()
 
     # Run one forward and backward pass.
-    x = torch.randn(4, 10, device=device)
+    x = torch.randn(4, 1000, device=device)
     y = torch.randn(4, 5, device=device)
     output = model(x)
     loss = criterion(output, y)
