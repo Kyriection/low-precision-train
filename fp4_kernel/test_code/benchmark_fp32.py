@@ -10,7 +10,7 @@ class FP32Linear(nn.Module):
         self.bias = nn.Parameter(torch.zeros(out_features, device="cuda"))
 
     def forward(self, x):
-        return F.linear(x, self.weight, self.bias)
+        return F.linear(x, self.weight.T, self.bias)
 
 class SimpleFP32Model(nn.Module):
     def __init__(self, in_features, hidden_features, out_features):
