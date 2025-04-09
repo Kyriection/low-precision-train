@@ -17,14 +17,14 @@ class SimpleFP4Model(nn.Module):
 
 def train_and_time():
     device = "cuda"
-    model = SimpleFP4Model(1000, 20000, 5).to(device)
+    model = SimpleFP4Model(1000, 2000, 5).to(device)
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     criterion = nn.MSELoss()
 
     # Warm up (run a few iterations to warm up CUDA)
     for _ in range(10):
-        x_w = torch.randn(4, 1000, device=device)
-        y_w = torch.randn(4, 5, device=device)
+        x_w = torch.randn(128, 1000, device=device)
+        y_w = torch.randn(128, 5, device=device)
         _ = model(x_w)
         loss = criterion(model(x_w), y_w)
         loss.backward()
@@ -39,8 +39,8 @@ def train_and_time():
     start_event.record()
 
     # Run one forward and backward pass.
-    x = torch.randn(4, 1000, device=device)
-    y = torch.randn(4, 5, device=device)
+    x = torch.randn(128, 1000, device=device)
+    y = torch.randn(128, 5, device=device)
     output = model(x)
     loss = criterion(output, y)
     loss.backward()
