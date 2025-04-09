@@ -17,7 +17,7 @@ class SimpleFP4Model(nn.Module):
 
 def train_and_time():
     device = "cuda"
-    model = SimpleFP4Model(1000, 2000, 5).to(device)
+    model = SimpleFP4Model(1000, 20000, 5).to(device)
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     criterion = nn.MSELoss()
 
