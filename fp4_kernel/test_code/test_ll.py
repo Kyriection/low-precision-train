@@ -3,6 +3,8 @@ import torch.nn as nn
 import torch.optim as optim
 from fp4_torch_kernel.layers import FP4Linear
 
+import time
+
 class SimpleFP4Model(nn.Module):
     def __init__(self, in_features, hidden_features, out_features):
         super(SimpleFP4Model, self).__init__()
@@ -42,10 +44,14 @@ def train_and_time():
     # Run one forward and backward pass.
     x = torch.randn(128, 8192, device=device)
     y = torch.randn(128, 8192, device=device)
+
+    start = time.time()
     output = model(x)
     loss = criterion(output, y)
     loss.backward()
     optimizer.step()
+    end = time.time()
+    print(f"**** Forward+Backward pass elapsed time: {end - start:.3f} seconds")
 
     # Record end event.
     end_event.record()
