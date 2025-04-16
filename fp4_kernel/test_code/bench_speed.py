@@ -147,16 +147,16 @@ def forward_single_layer(model_precision, bs, input_dim, hidden_dim):
 
 
 def main():
-    # forward_time_bench("fp32")
-    # forward_time_bench("fp4")
+    forward_time_bench("fp32")
+    forward_time_bench("fp4")
 
-    # # train_time_bench("fp32")
-    # # train_time_bench("fp4")
+    train_time_bench("fp32")
+    train_time_bench("fp4")
 
-    for dim in range(8192, 8192*16+1, 8192):
-        print(f"dim: {dim}")
-        forward_single_layer("fp32", 128, 8192, dim)
-        forward_single_layer("fp4", 128, 8192, dim)
+    # for dim in range(8192, 8192*16+1, 8192):
+    #     print(f"dim: {dim}")
+    #     forward_single_layer("fp32", 128, 8192, dim)
+    #     forward_single_layer("fp4", 128, 8192, dim)
 
 if __name__ == '__main__':
     main()
