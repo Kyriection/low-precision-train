@@ -74,8 +74,8 @@ class FP4LinearFunction(torch.autograd.Function):
         # grad_X = fp4_ext.fp4_matmul_backward_A(grad_output, W)
         # grad_W = fp4_ext.fp4_matmul_backward_B(X, grad_output)
 
-        grad_X = grad_output @ W
-        grad_W = grad_output.t() @ X
+        grad_X = grad_output @ W.t()
+        grad_W = X.t() @ grad_output
 
         grad_bias = grad_output.sum(dim=0)
         return grad_X, grad_W, grad_bias
