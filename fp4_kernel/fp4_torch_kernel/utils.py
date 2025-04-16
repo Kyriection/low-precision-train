@@ -71,11 +71,12 @@ class FP4LinearFunction(torch.autograd.Function):
         X, W, bias = ctx.saved_tensors
         # Compute gradients:
         # For Y = X * W, grad_X = grad_output * Wᵀ, grad_W = Xᵀ * grad_output.
-        # grad_X = fp4_ext.fp4_matmul_backward_A(grad_output, W)
-        # grad_W = fp4_ext.fp4_matmul_backward_B(X, grad_output)
 
-        grad_X = grad_output @ W.t()
-        grad_W = X.t() @ grad_output
+        grad_X = fp4_ext.fp4_matmul_backward_A(grad_output, W)
+        grad_W = fp4_ext.fp4_matmul_backward_B(X, grad_output)
+
+        # grad_X = grad_output @ W.t()
+        # grad_W = X.t() @ grad_output
 
         grad_bias = grad_output.sum(dim=0)
         return grad_X, grad_W, grad_bias
