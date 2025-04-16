@@ -3,6 +3,7 @@
 from torch.utils.cpp_extension import load
 import torch
 import os
+import torch.nn.functional as F
 
 #TODO: For the matmul impl check if in amp mode, bc in amp we only want the fw to be fp4 formatted.
 
@@ -63,7 +64,9 @@ class FP4LinearFunction(torch.autograd.Function):
     def forward(ctx, X, W, bias):
         ctx.save_for_backward(X, W, bias)
 
-        Y = fp4_ext.fp4_linear(X, W, bias)
+        # Y = fp4_ext.fp4_linear(X, W, bias)
+
+        Y = F.linear(X, W, bias)
 
         return Y
 
