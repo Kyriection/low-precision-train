@@ -114,12 +114,8 @@ def train_time_bench(model_precision):
     print(f"Average forward+backward pass time for {model_precision}: {1000 * avg_time:.4f} ms")
 
 
-def forward_single_layer(model_precision):
+def forward_single_layer(model_precision, bs, input_dim, hidden_dim):
     device = "cuda"
-
-    bs = 512
-    input_dim = 8192
-    hidden_dim = 28672
 
     if model_precision == "fp32":
         model = nn.Linear(input_dim, hidden_dim).to(device)
@@ -132,12 +128,10 @@ def forward_single_layer(model_precision):
     criterion = nn.MSELoss()
 
     # Warm up (run a few iterations to warm up CUDA)
-    print('**** Benchmarking forward for Single Layer****')
-    print('Warming up...')
     for _ in range(20):
         x_w = torch.randn(bs, input_dim, device=device)
         _ = model(x_w)
-    print('Warm up done!')
+    print('**** Benchmarking forward for Single Layer Warm up done!****')
 
     # Run one forward and backward pass.
     total_time = 0
@@ -153,14 +147,16 @@ def forward_single_layer(model_precision):
 
 
 def main():
-    forward_time_bench("fp32")
-    forward_time_bench("fp4")
+    # forward_time_bench("fp32")
+    # forward_time_bench("fp4")
 
-    # train_time_bench("fp32")
-    # train_time_bench("fp4")
+    # # train_time_bench("fp32")
+    # # train_time_bench("fp4")
 
-    forward_single_layer("fp32")
-    forward_single_layer("fp4")
+    for dim in range(8192, 8192*16+1, 8192):
+        print(f"dim: {dim}")
+        forward_single_layer("fp32", 128, dim, dim)
+        forward_single_layer("fp4", 128, dim, dim)
 
 if __name__ == '__main__':
     main()
