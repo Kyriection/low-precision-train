@@ -3,6 +3,21 @@ import torch.nn as nn
 import torch.optim as optim
 from fp4_torch_kernel.utils import FP4LinearFunction
 
+# def ref_nvfp4_quant(x, global_scale):
+#     assert global_scale.dtype == torch.float32
+#     assert x.ndim == 2
+#     m, n = x.shape
+#     x = torch.reshape(x, (m, n // BLOCK_SIZE, BLOCK_SIZE))
+#     vec_max = torch.max(torch.abs(x), dim=-1,
+#                         keepdim=True)[0].to(torch.float32)
+#     scale = global_scale * (vec_max * get_reciprocal(FLOAT4_E2M1_MAX))
+#     scale = scale.to(torch.float8_e4m3fn).to(torch.float32)
+#     output_scale = get_reciprocal(scale * get_reciprocal(global_scale))
+
+#     scaled_x = x.to(torch.float32) * output_scale
+#     clipped_x = torch.clamp(scaled_x, -6.0, 6.0).reshape(m, n)
+#     return cast_to_fp4(clipped_x), scale.squeeze(-1)
+
 class FP4Linear(nn.Module):
     def __init__(self, in_features, out_features):
         super(FP4Linear, self).__init__()
