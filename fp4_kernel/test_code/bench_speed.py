@@ -51,7 +51,6 @@ def forward_time_bench(model_precision):
 
     # Warm up (run a few iterations to warm up CUDA)
     print('**** Benchmarking ****')
-    print(f"Model precision: {model_precision}")
     print('Warming up...')
     for _ in range(20):
         x_w = torch.randn(bs, input_dim, device=device)
@@ -60,14 +59,15 @@ def forward_time_bench(model_precision):
 
     # Run one forward and backward pass.
     total_time = 0
-    for _ in range(100):
+    steps = 1000
+    for _ in range(steps):
         x = torch.randn(bs, input_dim, device=device)
         start = time.time()
         output = model(x)
         end = time.time()
         total_time += (end - start)
-    avg_time = total_time / 100
-    print(f"Average forward pass time for {model_precision}: {avg_time:.3f} seconds")
+    avg_time = total_time / steps
+    print(f"Average forward pass time for {model_precision}: {1000 * avg_time:.4f} ms")
 
 def train_and_time():
     device = "cuda"
