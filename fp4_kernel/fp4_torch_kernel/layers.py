@@ -6,8 +6,7 @@ class FP4Linear(nn.Module):
     def __init__(self, in_features, out_features):
         super(FP4Linear, self).__init__()
         # Create full precision master copies.
-        # self.weight = nn.Parameter(torch.randn(in_features, out_features, device="cuda"))
-        self.weight = nn.Parameter(torch.randn(out_features, in_features, device="cuda"))
+        self.weight = nn.Parameter(torch.randn(in_features, out_features, device="cuda"))
         self.bias = nn.Parameter(torch.zeros(out_features, device="cuda"))
     
     def forward(self, x):
