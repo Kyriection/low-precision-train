@@ -35,7 +35,7 @@ class SimpleFP4Model(nn.Module):
 def forward_time_bench(model_precision):
     device = "cuda"
 
-    bs = 128
+    bs = 512
     input_dim = 8192
     hidden_dim = 28672
 
@@ -73,7 +73,7 @@ def forward_time_bench(model_precision):
 def train_time_bench(model_precision):
     device = "cuda"
 
-    bs = 128
+    bs = 512
     input_dim = 8192
     hidden_dim = 28672
 
@@ -100,7 +100,7 @@ def train_time_bench(model_precision):
 
     # Run one forward and backward pass.
     total_time = 0
-    steps = 1000
+    steps = 100
     for _ in range(steps):
         x = torch.randn(bs, input_dim, device=device)
         y = torch.randn(bs, input_dim, device=device)
