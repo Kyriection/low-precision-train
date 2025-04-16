@@ -38,7 +38,7 @@ def train():
 
     # load weight & data 
     data = torch.load('demo/data.pth')
-    X, y = data['X'].to(device), data['y'].to(device)
+    X, y = data['x'].to(device), data['y'].to(device)
     model.load_state_dict(torch.load('demo/fp32_model.pth', map_location=device))
 
     for epoch in range(10):
