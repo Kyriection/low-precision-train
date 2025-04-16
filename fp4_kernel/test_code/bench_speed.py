@@ -131,7 +131,7 @@ def forward_single_layer(model_precision, bs, input_dim, hidden_dim):
     for _ in range(20):
         x_w = torch.randn(bs, input_dim, device=device)
         _ = model(x_w)
-    print('**** Benchmarking forward for Single Layer Warm up done!****')
+    # print('**** Benchmarking forward for Single Layer Warm up done!****')
 
     # Run one forward and backward pass.
     total_time = 0
@@ -155,8 +155,8 @@ def main():
 
     for dim in range(8192, 8192*16+1, 8192):
         print(f"dim: {dim}")
-        forward_single_layer("fp32", 128, dim, dim)
-        forward_single_layer("fp4", 128, dim, dim)
+        forward_single_layer("fp32", 128, 8192, dim)
+        forward_single_layer("fp4", 128, 8192, dim)
 
 if __name__ == '__main__':
     main()
