@@ -100,7 +100,7 @@ def train_time_bench(model_precision):
 
     # Run one forward and backward pass.
     total_time = 0
-    steps = 100
+    steps = 1000
     for _ in range(steps):
         x = torch.randn(bs, input_dim, device=device)
         y = torch.randn(bs, input_dim, device=device)
