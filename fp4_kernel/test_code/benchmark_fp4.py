@@ -3,6 +3,9 @@ import torch.nn as nn
 import torch.optim as optim
 from fp4_torch_kernel.utils import FP4LinearFunction
 
+import os
+os.environ["TORCH_CUDA_ARCH_LIST"] = "10.0"
+
 class FP4Linear(nn.Module):
     def __init__(self, in_features, out_features):
         super(FP4Linear, self).__init__()
