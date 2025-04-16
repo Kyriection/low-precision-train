@@ -6,8 +6,8 @@ import torch.nn.functional as F
 class FP32Linear(nn.Module):
     def __init__(self, in_features, out_features):
         super(FP32Linear, self).__init__()
-        self.weight = nn.Parameter(torch.randn(in_features, out_features, device="cuda"))
-        self.bias = nn.Parameter(torch.zeros(out_features, device="cuda"))
+        self.weight = nn.Parameter(torch.randn(in_features, out_features, device="cpu"))
+        self.bias = nn.Parameter(torch.zeros(out_features, device="cpu"))
 
     def forward(self, x):
         return F.linear(x, self.weight.T, self.bias)
@@ -26,7 +26,7 @@ class SimpleFP32Model(nn.Module):
         return x
 
 def train():
-    device = "cuda"
+    device = "cpu"
 
     input_dim = 10
     output_dim = 5
@@ -36,10 +36,10 @@ def train():
     optimizer = optim.Adam(model.parameters(), lr=0.1)
     criterion = nn.MSELoss()
 
-    torch.manual_seed(0)
-    X = torch.randn(num_samples, input_dim).to(device)
-    true_weights = torch.randn(input_dim, output_dim).to(device)
-    y = X @ true_weights + 0.01 * torch.randn(num_samples, output_dim).to(device)
+    # load weight & data 
+    data = torch.load('demo/data.pth')
+    X, y = data['X'].to(device), data['y'].to(device)
+    model.load_state_dict(torch.load('demo/fp32_model.pth', map_location=device))
 
     for epoch in range(10):
         optimizer.zero_grad()
