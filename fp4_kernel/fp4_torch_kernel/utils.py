@@ -66,7 +66,7 @@ class FP4LinearFunction(torch.autograd.Function):
 
         # Y = fp4_ext.fp4_linear(X, W, bias)
 
-        Y = F.linear(X, W, bias)
+        Y = F.linear(X, W.t(), bias)
 
         return Y
 
