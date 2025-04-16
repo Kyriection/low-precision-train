@@ -62,8 +62,6 @@ class FP4LinearFunction(torch.autograd.Function):
     @staticmethod
     def forward(ctx, X, W, bias):
         ctx.save_for_backward(X, W, bias)
-
-        print(X.dtype, W.dtype, bias.dtype)
         Y = fp4_ext.fp4_linear(X, W, bias)
         return Y
 
