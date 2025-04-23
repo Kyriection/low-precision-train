@@ -150,8 +150,8 @@ def main():
     forward_time_bench("fp32")
     forward_time_bench("fp4")
 
-    train_time_bench("fp32")
-    train_time_bench("fp4")
+    # train_time_bench("fp32")
+    # train_time_bench("fp4")
 
     # for dim in range(8192, 8192*16+1, 8192):
     #     print(f"dim: {dim}")
