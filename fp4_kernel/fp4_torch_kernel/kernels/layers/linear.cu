@@ -2,8 +2,8 @@
 #include <torch/extension.h>
 #include <cuda_runtime.h>
 
-#define TILE_SIZE 64      // For simplicity; adjust if you implement per-thread multi-load for larger tiles.
-#define UNROLL_FACTOR 8   // Adjust to balance loop overhead vs. register pressure.
+#define TILE_SIZE 16      // For simplicity; adjust if you implement per-thread multi-load for larger tiles.
+#define UNROLL_FACTOR 4   // Adjust to balance loop overhead vs. register pressure.
 
 // -------------------------
 // Fused Linear Kernel (Forward)
