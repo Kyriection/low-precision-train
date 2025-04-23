@@ -86,12 +86,13 @@ class FP4DequantizeFunction(torch.autograd.Function):
 class FP4LinearFunction(torch.autograd.Function):
     @staticmethod
     def forward(ctx, X, W, bias):
-        ctx.save_for_backward(X, W)
+        ctx.save_for_backward(X.to(torch.bfloat16), W.to(torch.bfloat16))
         return fp4_ext.fp4_linear(X, W, bias)
 
     @staticmethod
     def backward(ctx, grad_output):
         X, W = ctx.saved_tensors
+        grad_output = grad_output.to(torch.bfloat16)
         grad_X = grad_output @ W.t()
         grad_W = X.t() @ grad_output
         grad_bias = grad_output.sum(dim=0)

@@ -44,7 +44,7 @@ def forward_time_bench(model_precision):
     elif model_precision == "bf16":
         model = SimpleFP32Model(input_dim, hidden_dim, input_dim).to(device, dtype=torch.bfloat16)
     elif model_precision == "fp4":
-        model = SimpleFP4Model(input_dim, hidden_dim, input_dim).to(device, dtype=torch.bfloat16)
+        model = SimpleFP4Model(input_dim, hidden_dim, input_dim).to(device)
     else:
         raise ValueError("model_precision must be either 'fp32' or 'fp4'")
 
@@ -55,7 +55,7 @@ def forward_time_bench(model_precision):
     print('**** Benchmarking forward****')
     print('Warming up...')
     for _ in range(20):
-        if model_precision == 'bf16' or model_precision == 'fp4':
+        if model_precision == 'bf16':
             x_w = torch.randn(bs, input_dim, device=device, dtype=torch.bfloat16)
         else:
             x_w = torch.randn(bs, input_dim, device=device)
@@ -66,7 +66,7 @@ def forward_time_bench(model_precision):
     total_time = 0
     steps = 100
     for _ in range(steps):
-        if model_precision == 'bf16' or model_precision == 'fp4':
+        if model_precision == 'bf16':
             x = torch.randn(bs, input_dim, device=device, dtype=torch.bfloat16)
         else:
             x = torch.randn(bs, input_dim, device=device)
@@ -90,7 +90,7 @@ def train_time_bench(model_precision):
     elif model_precision == "bf16":
         model = SimpleFP32Model(input_dim, hidden_dim, input_dim).to(device, dtype=torch.bfloat16)
     elif model_precision == "fp4":
-        model = SimpleFP4Model(input_dim, hidden_dim, input_dim).to(device, dtype=torch.bfloat16)
+        model = SimpleFP4Model(input_dim, hidden_dim, input_dim).to(device)
     else:
         raise ValueError("model_precision must be either 'fp32' or 'fp4'")
 
@@ -101,7 +101,7 @@ def train_time_bench(model_precision):
     print('**** Benchmarking forward+backward****')
     print('Warming up...')
     for _ in range(20):
-        if model_precision == 'bf16' or model_precision == 'fp4':
+        if model_precision == 'bf16':
             x_w = torch.randn(bs, input_dim, device=device, dtype=torch.bfloat16)
             y_w = torch.randn(bs, input_dim, device=device, dtype=torch.bfloat16)
         else:
@@ -116,7 +116,7 @@ def train_time_bench(model_precision):
     total_time = 0
     steps = 100
     for _ in range(steps):
-        if model_precision == 'bf16' or model_precision == 'fp4':
+        if model_precision == 'bf16':
             x = torch.randn(bs, input_dim, device=device, dtype=torch.bfloat16)
             y = torch.randn(bs, input_dim, device=device, dtype=torch.bfloat16)
         else:
