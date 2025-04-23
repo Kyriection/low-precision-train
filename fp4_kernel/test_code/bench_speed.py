@@ -87,6 +87,8 @@ def train_time_bench(model_precision):
 
     if model_precision == "fp32":
         model = SimpleFP32Model(input_dim, hidden_dim, input_dim).to(device)
+    elif model_precision == "bf16":
+        model = SimpleFP32Model(input_dim, hidden_dim, input_dim).to(device, dtype=torch.bfloat16)
     elif model_precision == "fp4":
         model = SimpleFP4Model(input_dim, hidden_dim, input_dim).to(device)
     else:
@@ -99,8 +101,12 @@ def train_time_bench(model_precision):
     print('**** Benchmarking forward+backward****')
     print('Warming up...')
     for _ in range(20):
-        x_w = torch.randn(bs, input_dim, device=device)
-        y_w = torch.randn(bs, input_dim, device=device)
+        if model_precision == 'bf16':
+            x_w = torch.randn(bs, input_dim, device=device, dtype=torch.bfloat16)
+            y_w = torch.randn(bs, input_dim, device=device, dtype=torch.bfloat16)
+        else:
+            x_w = torch.randn(bs, input_dim, device=device)
+            y_w = torch.randn(bs, input_dim, device=device)
         pred_w = model(x_w)
         loss = criterion(pred_w, y_w)
         loss.backward()
@@ -110,8 +116,12 @@ def train_time_bench(model_precision):
     total_time = 0
     steps = 100
     for _ in range(steps):
-        x = torch.randn(bs, input_dim, device=device)
-        y = torch.randn(bs, input_dim, device=device)
+        if model_precision == 'bf16':
+            x = torch.randn(bs, input_dim, device=device, dtype=torch.bfloat16)
+            y = torch.randn(bs, input_dim, device=device, dtype=torch.bfloat16)
+        else:
+            x = torch.randn(bs, input_dim, device=device)
+            y = torch.randn(bs, input_dim, device=device)
         start = time.time()
         output = model(x)
         loss = criterion(output, y)
@@ -159,8 +169,9 @@ def main():
     forward_time_bench("bf16")
     forward_time_bench("fp4")
 
-    # train_time_bench("fp32")
-    # train_time_bench("fp4")
+    train_time_bench("fp32")
+    train_time_bench("bf16")
+    train_time_bench("fp4")
 
     # for dim in range(8192, 8192*16+1, 8192):
     #     print(f"dim: {dim}")
