@@ -59,41 +59,45 @@ class FP4DequantizeFunction(torch.autograd.Function):
     def backward(ctx, grad_output):
         return grad_output
 
-# class FP4LinearFunction(torch.autograd.Function):
-#     @staticmethod
-#     def forward(ctx, X, W, bias):
-#         ctx.save_for_backward(X, W, bias)
-#         Y = fp4_ext.fp4_linear(X, W, bias)
-#         return Y
-
-#     @staticmethod
-#     def backward(ctx, grad_output):
-#         X, W, bias = ctx.saved_tensors
-#         # Compute gradients:
-#         # For Y = X * W, grad_X = grad_output * Wᵀ, grad_W = Xᵀ * grad_output.
-
-#         grad_X = fp4_ext.fp4_matmul_backward_A(grad_output, W)
-#         grad_W = fp4_ext.fp4_matmul_backward_B(X, grad_output)
-
-#         # grad_X = grad_output @ W.t()
-#         # grad_W = X.t() @ grad_output
-
-#         grad_bias = grad_output.sum(dim=0)
-#         return grad_X, grad_W, grad_bias
-
-
-
 class FP4LinearFunction(torch.autograd.Function):
     @staticmethod
     def forward(ctx, X, W, bias):
-        ctx.save_for_backward(X.to(torch.bfloat16), W.to(torch.bfloat16))
-        return fp4_ext.fp4_linear(X, W, bias)
+        ctx.save_for_backward(X, W, bias)
+        Y = fp4_ext.fp4_linear(X, W, bias)
+        return Y
 
     @staticmethod
     def backward(ctx, grad_output):
-        X, W = ctx.saved_tensors
-        grad_output = grad_output.to(torch.bfloat16)
-        grad_X = grad_output @ W.t()
-        grad_W = X.t() @ grad_output
+        X, W, bias = ctx.saved_tensors
+        # Compute gradients:
+        # For Y = X * W, grad_X = grad_output * Wᵀ, grad_W = Xᵀ * grad_output.
+
+        # grad_X = fp4_ext.fp4_matmul_backward_A(grad_output, W)
+        # grad_W = fp4_ext.fp4_matmul_backward_B(X, grad_output)
+
+        W_t = W.t().contiguous()
+        grad_output = grad_output.contiguous()
+        X_t = X.t().contiguous()
+
+        grad_X = grad_output @ W_t
+        grad_W = X_t @ grad_output
+
         grad_bias = grad_output.sum(dim=0)
         return grad_X, grad_W, grad_bias
+
+
+
+# class FP4LinearFunction(torch.autograd.Function):
+#     @staticmethod
+#     def forward(ctx, X, W, bias):
+#         ctx.save_for_backward(X.to(torch.bfloat16), W.to(torch.bfloat16))
+#         return fp4_ext.fp4_linear(X, W, bias)
+
+#     @staticmethod
+#     def backward(ctx, grad_output):
+#         X, W = ctx.saved_tensors
+#         grad_output = grad_output.to(torch.bfloat16)
+#         grad_X = grad_output @ W.t()
+#         grad_W = X.t() @ grad_output
+#         grad_bias = grad_output.sum(dim=0)
+#         return grad_X, grad_W, grad_bias
