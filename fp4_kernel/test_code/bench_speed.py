@@ -55,7 +55,10 @@ def forward_time_bench(model_precision):
     print('**** Benchmarking forward****')
     print('Warming up...')
     for _ in range(20):
-        x_w = torch.randn(bs, input_dim, device=device)
+        if model_precision == 'bf16':
+            x_w = torch.randn(bs, input_dim, device=device, dtype=torch.bfloat16)
+        else:
+            x_w = torch.randn(bs, input_dim, device=device)
         _ = model(x_w)
     print('Warm up done!')
 
@@ -63,7 +66,10 @@ def forward_time_bench(model_precision):
     total_time = 0
     steps = 100
     for _ in range(steps):
-        x = torch.randn(bs, input_dim, device=device)
+        if model_precision == 'bf16':
+            x = torch.randn(bs, input_dim, device=device, dtype=torch.bfloat16)
+        else:
+            x = torch.randn(bs, input_dim, device=device)
         start = time.time()
         _ = model(x)
         end = time.time()
