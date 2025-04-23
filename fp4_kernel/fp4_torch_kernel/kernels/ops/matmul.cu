@@ -2,7 +2,7 @@
 #include <torch/extension.h>
 #include <cuda_runtime.h>
 
-#define TILE_SIZE 128
+#define TILE_SIZE 32
 #define UNROLL_FACTOR 8
 
 // -------------------------
